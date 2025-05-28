@@ -39,6 +39,11 @@
             border-radius: 0.375rem; /* rounded-md */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
         }
+
+        /* Admin-only elements (hidden by default for non-admin users) */
+        .admin-only.hidden {
+            display: none;
+        }
         /* Custom table styling */
         thead th {
             background-color: #f1f5f9; /* Tailwind slate-100 */
@@ -105,16 +110,21 @@
             align-items: center;
             z-index: 1000;
             backdrop-filter: blur(3px);
+            overflow-y: auto;
+            padding: 20px 0;
         }
 
         .clock-modal-content {
             background: white;
-            padding: 25px;
+            padding: 15px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            width: 350px;
+            width: 300px;
             max-width: 90vw;
+            max-height: 90vh;
             animation: modalFadeIn 0.3s ease;
+            margin: auto;
+            overflow-y: auto;
         }
 
         @keyframes modalFadeIn {
@@ -160,18 +170,19 @@
             background-color: #f3f4f6;
             color: #1f2937;
             border: none;
-            border-radius: 8px;
-            padding: 10px 0;
-            font-size: 16px;
+            border-radius: 6px;
+            padding: 8px 0;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            margin: 2px;
         }
 
         .hour-button:hover {
             background-color: #e5e7eb;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         .hour-button.selected {
@@ -221,7 +232,9 @@
              <p class="text-xs text-center text-gray-500 mt-6">
                 <strong>Admin account:</strong> username: admin / password: admin123
                 <br>
-                <strong>Employee accounts:</strong> username: [employee email] / password: user123
+                <strong>Manager accounts:</strong> username: bob@company.com, diana@company.com, etc. / password: user123
+                <br>
+                <strong>Employee accounts:</strong> username: alice@company.com, charlie@company.com, etc. / password: user123
                 <br>
                 <strong class="text-red-600">Note: This login is for demonstration only and is not secure.</strong>
             </p>
@@ -246,47 +259,62 @@
                 </div>
                 <nav class="mt-6 flex-1">
                     <ul>
-                        <li>
+                        <li id="nav-item-dashboard" class="admin-only">
                             <a href="#" id="nav-dashboard" class="sidebar-link active flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('dashboard')">
                                 <i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-employee-profile" class="hidden">
+                            <a href="#" id="nav-employee-profile" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('employee-profile')">
+                                <i class="fas fa-user w-5 mr-3"></i> My Profile
+                            </a>
+                        </li>
+                        <li id="nav-item-my-requests" class="hidden">
+                            <a href="#" id="nav-my-requests" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('my-requests')">
+                                <i class="fas fa-clipboard-list w-5 mr-3"></i> My Requests
+                            </a>
+                        </li>
+                        <li id="nav-item-manager-dashboard" class="hidden">
+                            <a href="#" id="nav-manager-dashboard" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('manager-dashboard')">
+                                <i class="fas fa-user-tie w-5 mr-3"></i> Manager Dashboard
+                            </a>
+                        </li>
+                        <li id="nav-item-database" class="admin-only">
                             <a href="#" id="nav-database" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('database')">
                                 <i class="fas fa-users w-5 mr-3"></i> Employee Database
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-leaves" class="admin-only">
                             <a href="#" id="nav-leaves" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('leaves')">
                                 <i class="fas fa-calendar-alt w-5 mr-3"></i> Employee Leaves
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-excuses" class="admin-only">
                             <a href="#" id="nav-excuses" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('excuses')">
                                 <i class="fas fa-clock w-5 mr-3"></i> Employee Excuses
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-overtime" class="admin-only">
                             <a href="#" id="nav-overtime" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('overtime')">
                                 <i class="fas fa-business-time w-5 mr-3"></i> Employee Overtime
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-penalties" class="admin-only">
                             <a href="#" id="nav-penalties" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('penalties')">
                                 <i class="fas fa-exclamation-triangle w-5 mr-3"></i> Employee Penalties
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-salary" class="admin-only">
                             <a href="#" id="nav-salary" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('salary')">
                                 <i class="fas fa-dollar-sign w-5 mr-3"></i> Salary Details
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-payroll" class="admin-only">
                             <a href="#" id="nav-payroll" class="sidebar-link flex items-center px-6 py-3 bg-yellow-100 text-red-600 font-bold hover:bg-gray-100 transition duration-150" onclick="showSection('payroll')">
                                 <i class="fas fa-money-bill-wave w-5 mr-3"></i> Payroll
                             </a>
                         </li>
-                        <li>
+                        <li id="nav-item-settings" class="admin-only">
                             <a href="#" id="nav-settings" class="sidebar-link flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 transition duration-150" onclick="showSection('settings')">
                                 <i class="fas fa-cog w-5 mr-3"></i> Settings
                             </a>
@@ -682,22 +710,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="excuse-start-time-display" class="block text-sm font-medium text-gray-700 mb-1">Start Time (From)</label>
-                                    <div class="relative">
-                                        <input type="text" id="excuse-start-time-display" readonly required class="w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
+                                    <div class="flex">
+                                        <input type="text" id="excuse-start-time-display" readonly required class="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
                                         <input type="hidden" id="excuse-start-time" required>
-                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                        </div>
+                                        <button type="button" onclick="openClockModal('excuse-start-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-r-md">
+                                            <i class="fas fa-clock text-gray-600"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div>
                                     <label for="excuse-end-time-display" class="block text-sm font-medium text-gray-700 mb-1">End Time (To)</label>
-                                    <div class="relative">
-                                        <input type="text" id="excuse-end-time-display" readonly required class="w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
+                                    <div class="flex">
+                                        <input type="text" id="excuse-end-time-display" readonly required class="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
                                         <input type="hidden" id="excuse-end-time" required>
-                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <i class="fas fa-clock text-gray-400"></i>
-                                        </div>
+                                        <button type="button" onclick="openClockModal('excuse-end-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-r-md">
+                                            <i class="fas fa-clock text-gray-600"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -820,24 +848,26 @@
                                 <label for="overtime-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
                                 <input type="text" id="overtime-date" required placeholder="Select date" class="w-full p-2 border border-gray-300 rounded-md shadow-sm flatpickr-input">
                             </div>
-                            <div>
-                                <label for="overtime-start-time" class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-                                <div class="flex space-x-2">
-                                    <input type="hidden" id="overtime-start-time">
-                                    <input type="text" id="overtime-start-time-display" readonly required placeholder="Select start time" class="w-full p-2 border border-gray-300 rounded-md shadow-sm cursor-pointer">
-                                    <button type="button" onclick="openClockModal('overtime-start-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-md">
-                                        <i class="fas fa-clock"></i>
-                                    </button>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="overtime-start-time-display" class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                                    <div class="flex">
+                                        <input type="text" id="overtime-start-time-display" readonly required class="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
+                                        <input type="hidden" id="overtime-start-time" required>
+                                        <button type="button" onclick="openClockModal('overtime-start-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-r-md">
+                                            <i class="fas fa-clock text-gray-600"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <label for="overtime-end-time" class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-                                <div class="flex space-x-2">
-                                    <input type="hidden" id="overtime-end-time">
-                                    <input type="text" id="overtime-end-time-display" readonly required placeholder="Select end time" class="w-full p-2 border border-gray-300 rounded-md shadow-sm cursor-pointer">
-                                    <button type="button" onclick="openClockModal('overtime-end-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-md">
-                                        <i class="fas fa-clock"></i>
-                                    </button>
+                                <div>
+                                    <label for="overtime-end-time-display" class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                                    <div class="flex">
+                                        <input type="text" id="overtime-end-time-display" readonly required class="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm bg-gray-50 cursor-pointer" placeholder="Click to select time">
+                                        <input type="hidden" id="overtime-end-time" required>
+                                        <button type="button" onclick="openClockModal('overtime-end-time')" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-r-md">
+                                            <i class="fas fa-clock text-gray-600"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div>
@@ -1321,6 +1351,206 @@
                 </div>
             </section>
 
+            <!-- Employee Profile Section -->
+            <section id="employee-profile" class="hidden space-y-6">
+                <h1 class="text-3xl font-bold text-gray-800">My Profile</h1>
+
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Employee Basic Info -->
+                        <div class="md:col-span-1">
+                            <div class="bg-indigo-50 p-6 rounded-lg text-center">
+                                <div class="w-32 h-32 mx-auto bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-user text-indigo-600 text-5xl"></i>
+                                </div>
+                                <h2 id="profile-name" class="text-xl font-bold text-gray-800 mb-1"></h2>
+                                <p id="profile-position" class="text-sm text-gray-600 mb-3"></p>
+                                <div class="flex justify-center space-x-2">
+                                    <span id="profile-status" class="px-3 py-1 text-xs font-semibold rounded-full"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Employee Details -->
+                        <div class="md:col-span-2">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Personal Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">Employee ID</p>
+                                    <p id="profile-id" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Department</p>
+                                    <p id="profile-department" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Email</p>
+                                    <p id="profile-email" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Phone</p>
+                                    <p id="profile-phone" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Date of Birth</p>
+                                    <p id="profile-dob" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Hiring Date</p>
+                                    <p id="profile-hiring-date" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Direct Manager</p>
+                                    <p id="profile-manager" class="font-medium"></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Level</p>
+                                    <p id="profile-level" class="font-medium"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leave Balance Card -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Leave Balance</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Annual Leave Balance</p>
+                            <p id="profile-leave-balance" class="text-2xl font-bold text-green-600"></p>
+                            <p class="text-xs text-gray-500 mt-1">Remaining days in current year</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Used Leave Days</p>
+                            <p id="profile-used-leaves" class="text-2xl font-bold text-blue-600">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Days used in current year</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Pending Requests</p>
+                            <p id="profile-pending-requests" class="text-2xl font-bold text-purple-600">0</p>
+                            <p class="text-xs text-gray-500 mt-1">Awaiting approval</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Requests Section -->
+            <section id="my-requests" class="hidden space-y-6">
+                <h1 class="text-3xl font-bold text-gray-800">My Requests</h1>
+
+                <!-- Request Actions -->
+                <div class="flex flex-wrap gap-4">
+                    <button id="new-leave-request-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-150">
+                        <i class="fas fa-calendar-plus mr-2"></i> New Leave Request
+                    </button>
+                    <button id="new-excuse-request-btn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-150">
+                        <i class="fas fa-clock mr-2"></i> New Excuse Request
+                    </button>
+                    <button id="new-overtime-request-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md shadow transition duration-150">
+                        <i class="fas fa-business-time mr-2"></i> New Overtime Request
+                    </button>
+                </div>
+
+                <!-- Requests Summary -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Leave Requests</h3>
+                            <span id="my-leave-count" class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">0</span>
+                        </div>
+                        <div id="my-leave-requests" class="space-y-3 max-h-80 overflow-y-auto">
+                            <!-- Leave requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No leave requests found</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Excuse Requests</h3>
+                            <span id="my-excuse-count" class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">0</span>
+                        </div>
+                        <div id="my-excuse-requests" class="space-y-3 max-h-80 overflow-y-auto">
+                            <!-- Excuse requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No excuse requests found</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Overtime Requests</h3>
+                            <span id="my-overtime-count" class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">0</span>
+                        </div>
+                        <div id="my-overtime-requests" class="space-y-3 max-h-80 overflow-y-auto">
+                            <!-- Overtime requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No overtime requests found</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manager Dashboard Section -->
+            <section id="manager-dashboard" class="hidden space-y-6">
+                <h1 class="text-3xl font-bold text-gray-800">Manager Dashboard</h1>
+
+                <!-- Team Overview -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">My Team</h2>
+                    <div id="team-members-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Team members will be populated here -->
+                        <p class="text-gray-500 col-span-full text-center py-4">No team members found</p>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Pending Approvals</h2>
+
+                    <!-- Tabs -->
+                    <div class="border-b border-gray-200 mb-4">
+                        <ul class="flex flex-wrap -mb-px">
+                            <li class="mr-2">
+                                <button id="tab-pending-leaves" class="inline-block py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium" onclick="switchApprovalTab('pending-leaves')">
+                                    Leaves <span id="pending-leaves-count" class="ml-1 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">0</span>
+                                </button>
+                            </li>
+                            <li class="mr-2">
+                                <button id="tab-pending-excuses" class="inline-block py-2 px-4 text-gray-500 hover:text-gray-700 font-medium" onclick="switchApprovalTab('pending-excuses')">
+                                    Excuses <span id="pending-excuses-count" class="ml-1 px-2 py-0.5 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">0</span>
+                                </button>
+                            </li>
+                            <li>
+                                <button id="tab-pending-overtime" class="inline-block py-2 px-4 text-gray-500 hover:text-gray-700 font-medium" onclick="switchApprovalTab('pending-overtime')">
+                                    Overtime <span id="pending-overtime-count" class="ml-1 px-2 py-0.5 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">0</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="pending-leaves-content" class="approval-tab-content">
+                        <div id="pending-leaves-container" class="space-y-4">
+                            <!-- Pending leave requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No pending leave requests</p>
+                        </div>
+                    </div>
+
+                    <div id="pending-excuses-content" class="approval-tab-content hidden">
+                        <div id="pending-excuses-container" class="space-y-4">
+                            <!-- Pending excuse requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No pending excuse requests</p>
+                        </div>
+                    </div>
+
+                    <div id="pending-overtime-content" class="approval-tab-content hidden">
+                        <div id="pending-overtime-container" class="space-y-4">
+                            <!-- Pending overtime requests will be populated here -->
+                            <p class="text-gray-500 text-center py-4">No pending overtime requests</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="settings" class="hidden space-y-6">
                 <h1 class="text-3xl font-bold text-gray-800">Settings</h1>
 
@@ -1560,32 +1790,32 @@
         <div id="clockModal" class="clock-modal hidden">
             <div class="clock-modal-content">
                 <div class="clock-modal-header">
-                    <h3 class="clock-modal-title" id="clock-modal-title">Select Time</h3>
+                    <h3 class="clock-modal-title text-base" id="clock-modal-title">Select Time</h3>
                     <button id="close-clock-modal" class="clock-modal-close">&times;</button>
                 </div>
 
                 <!-- AM Hours -->
-                <div class="mb-4">
-                    <h4 class="text-center font-semibold text-gray-700 mb-2">AM</h4>
-                    <div class="grid grid-cols-4 gap-2" id="am-hours-container">
+                <div class="mb-3">
+                    <h4 class="text-center font-semibold text-gray-700 mb-1 text-sm">AM</h4>
+                    <div class="grid grid-cols-4 gap-1" id="am-hours-container">
                         <!-- AM hours will be added by JS -->
                     </div>
                 </div>
 
                 <!-- PM Hours -->
-                <div class="mb-4">
-                    <h4 class="text-center font-semibold text-gray-700 mb-2">PM</h4>
-                    <div class="grid grid-cols-4 gap-2" id="pm-hours-container">
+                <div class="mb-3">
+                    <h4 class="text-center font-semibold text-gray-700 mb-1 text-sm">PM</h4>
+                    <div class="grid grid-cols-4 gap-1" id="pm-hours-container">
                         <!-- PM hours will be added by JS -->
                     </div>
                 </div>
 
-                <div class="clock-time-display text-center font-bold text-xl text-indigo-600 my-3" id="clock-time-display">
+                <div class="clock-time-display text-center font-bold text-base text-indigo-600 my-2" id="clock-time-display">
                     Selected: <span id="selected-time-text">Not selected</span>
                 </div>
 
-                <div class="flex justify-end mt-4">
-                    <button id="clock-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
+                <div class="flex justify-end mt-3">
+                    <button id="clock-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-1.5 px-4 rounded-md text-sm transition duration-150">
                         Confirm
                     </button>
                 </div>
@@ -1614,18 +1844,18 @@
             </div>
         </div>
     </div> <script>
-        // --- Mock Data (Added Gender) ---
+        // --- Mock Data (Added Gender and Email) ---
         let employees = [
-            { id: 'EMP001', fullName: 'Alice Wonderland', gender: 'Female', hiringDate: '2022-01-15', position: 'Software Developer', department: 'IT', dob: '1995-05-20', idNumber: '12345678901234', socialInsurance: 'SI12345', status: 'Active', militaryStatus: 'N/A', level: 'Non-manager', directManager: 'Bob The Builder', resignDate: null, maritalStatus: 'Single', faculty: 'Computer Science', gradYear: 2018, annualLeaveBalance: 21 },
-            { id: 'EMP002', fullName: 'Bob The Builder', gender: 'Male', hiringDate: '2021-03-10', position: 'IT Manager', department: 'IT', dob: '1988-11-02', idNumber: '98765432109876', socialInsurance: 'SI67890', status: 'Active', militaryStatus: 'Exempted', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Engineering', gradYear: 2010, annualLeaveBalance: 21 },
-            { id: 'EMP003', fullName: 'Charlie Chaplin', gender: 'Male', hiringDate: '2023-07-01', position: 'HR Specialist', department: 'HR', dob: '1992-09-15', idNumber: '11223344556677', socialInsurance: 'SI11223', status: 'Active', militaryStatus: 'Completed', level: 'Non-manager', directManager: 'Diana Prince', resignDate: null, maritalStatus: 'Single', faculty: 'Business Administration', gradYear: 2015, annualLeaveBalance: 15 },
-            { id: 'EMP004', fullName: 'Diana Prince', gender: 'Female', hiringDate: '2020-05-20', position: 'HR Manager', department: 'HR', dob: '1985-03-08', idNumber: '22446688001122', socialInsurance: 'SI22446', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Psychology', gradYear: 2008, annualLeaveBalance: 21 },
-            { id: 'EMP005', fullName: 'Ethan Hunt', gender: 'Male', hiringDate: '2022-11-01', position: 'Marketing Analyst', department: 'Marketing', dob: '1996-12-25', idNumber: '33557799112233', socialInsurance: 'SI33557', status: 'Active', militaryStatus: 'Postponed', level: 'Non-manager', directManager: 'Felicity Smoak', resignDate: null, maritalStatus: 'Single', faculty: 'Marketing', gradYear: 2019, annualLeaveBalance: 18 },
-            { id: 'EMP006', fullName: 'Felicity Smoak', gender: 'Female', hiringDate: '2019-08-15', position: 'Marketing Manager', department: 'Marketing', dob: '1990-07-19', idNumber: '44668800223344', socialInsurance: 'SI44668', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Single', faculty: 'Communications', gradYear: 2012, annualLeaveBalance: 21 },
-            { id: 'EMP007', fullName: 'Grace Hopper', gender: 'Female', hiringDate: '2024-01-10', position: 'Accountant', department: 'Finance', dob: '1998-02-14', idNumber: '55779911334455', socialInsurance: 'SI55779', status: 'Active', militaryStatus: 'N/A', level: 'Non-manager', directManager: 'Harold Finch', resignDate: null, maritalStatus: 'Single', faculty: 'Accounting', gradYear: 2021, annualLeaveBalance: 21 },
-             { id: 'EMP008', fullName: 'Harold Finch', gender: 'Male', hiringDate: '2018-06-01', position: 'Finance Manager', department: 'Finance', dob: '1982-04-30', idNumber: '66880022445566', socialInsurance: 'SI66880', status: 'Active', militaryStatus: 'Exempted', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Economics', gradYear: 2005, annualLeaveBalance: 21 },
-             { id: 'EMP009', fullName: 'Inactive Ian', gender: 'Male', hiringDate: '2020-02-02', position: 'Operations Assistant', department: 'Operations', dob: '1993-01-01', idNumber: '77991133556677', socialInsurance: 'SI77991', status: 'Inactive', militaryStatus: 'Completed', level: 'Non-manager', directManager: 'Jane Doe', resignDate: '2023-12-31', maritalStatus: 'Divorced', faculty: 'Logistics', gradYear: 2016, annualLeaveBalance: 0 },
-             { id: 'EMP010', fullName: 'Jane Doe', gender: 'Female', hiringDate: '2019-01-15', position: 'Operations Manager', department: 'Operations', dob: '1987-06-10', idNumber: '88002244667788', socialInsurance: 'SI88002', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Supply Chain Management', gradYear: 2009, annualLeaveBalance: 21 },
+            { id: 'EMP001', fullName: 'Alice Wonderland', gender: 'Female', hiringDate: '2022-01-15', position: 'Software Developer', department: 'IT', dob: '1995-05-20', phone: '555-123-4567', email: 'alice@company.com', address: '123 Main St', idNumber: '12345678901234', socialInsurance: 'SI12345', status: 'Active', militaryStatus: 'N/A', level: 'Non-manager', directManager: 'Bob The Builder', resignDate: null, maritalStatus: 'Single', faculty: 'Computer Science', gradYear: 2018, annualLeaveBalance: 21 },
+            { id: 'EMP002', fullName: 'Bob The Builder', gender: 'Male', hiringDate: '2021-03-10', position: 'IT Manager', department: 'IT', dob: '1988-11-02', phone: '555-234-5678', email: 'bob@company.com', address: '456 Oak Ave', idNumber: '98765432109876', socialInsurance: 'SI67890', status: 'Active', militaryStatus: 'Exempted', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Engineering', gradYear: 2010, annualLeaveBalance: 21 },
+            { id: 'EMP003', fullName: 'Charlie Chaplin', gender: 'Male', hiringDate: '2023-07-01', position: 'HR Specialist', department: 'HR', dob: '1992-09-15', phone: '555-345-6789', email: 'charlie@company.com', address: '789 Pine Blvd', idNumber: '11223344556677', socialInsurance: 'SI11223', status: 'Active', militaryStatus: 'Completed', level: 'Non-manager', directManager: 'Diana Prince', resignDate: null, maritalStatus: 'Single', faculty: 'Business Administration', gradYear: 2015, annualLeaveBalance: 15 },
+            { id: 'EMP004', fullName: 'Diana Prince', gender: 'Female', hiringDate: '2020-05-20', position: 'HR Manager', department: 'HR', dob: '1985-03-08', phone: '555-456-7890', email: 'diana@company.com', address: '101 Elm St', idNumber: '22446688001122', socialInsurance: 'SI22446', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Psychology', gradYear: 2008, annualLeaveBalance: 21 },
+            { id: 'EMP005', fullName: 'Ethan Hunt', gender: 'Male', hiringDate: '2022-11-01', position: 'Marketing Analyst', department: 'Marketing', dob: '1996-12-25', phone: '555-567-8901', email: 'ethan@company.com', address: '202 Maple Dr', idNumber: '33557799112233', socialInsurance: 'SI33557', status: 'Active', militaryStatus: 'Postponed', level: 'Non-manager', directManager: 'Felicity Smoak', resignDate: null, maritalStatus: 'Single', faculty: 'Marketing', gradYear: 2019, annualLeaveBalance: 18 },
+            { id: 'EMP006', fullName: 'Felicity Smoak', gender: 'Female', hiringDate: '2019-08-15', position: 'Marketing Manager', department: 'Marketing', dob: '1990-07-19', phone: '555-678-9012', email: 'felicity@company.com', address: '303 Cedar Ln', idNumber: '44668800223344', socialInsurance: 'SI44668', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Single', faculty: 'Communications', gradYear: 2012, annualLeaveBalance: 21 },
+            { id: 'EMP007', fullName: 'Grace Hopper', gender: 'Female', hiringDate: '2024-01-10', position: 'Accountant', department: 'Finance', dob: '1998-02-14', phone: '555-789-0123', email: 'grace@company.com', address: '404 Birch Rd', idNumber: '55779911334455', socialInsurance: 'SI55779', status: 'Active', militaryStatus: 'N/A', level: 'Non-manager', directManager: 'Harold Finch', resignDate: null, maritalStatus: 'Single', faculty: 'Accounting', gradYear: 2021, annualLeaveBalance: 21 },
+            { id: 'EMP008', fullName: 'Harold Finch', gender: 'Male', hiringDate: '2018-06-01', position: 'Finance Manager', department: 'Finance', dob: '1982-04-30', phone: '555-890-1234', email: 'harold@company.com', address: '505 Walnut Ave', idNumber: '66880022445566', socialInsurance: 'SI66880', status: 'Active', militaryStatus: 'Exempted', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Economics', gradYear: 2005, annualLeaveBalance: 21 },
+            { id: 'EMP009', fullName: 'Inactive Ian', gender: 'Male', hiringDate: '2020-02-02', position: 'Operations Assistant', department: 'Operations', dob: '1993-01-01', phone: '555-901-2345', email: 'ian@company.com', address: '606 Spruce Ct', idNumber: '77991133556677', socialInsurance: 'SI77991', status: 'Inactive', militaryStatus: 'Completed', level: 'Non-manager', directManager: 'Jane Doe', resignDate: '2023-12-31', maritalStatus: 'Divorced', faculty: 'Logistics', gradYear: 2016, annualLeaveBalance: 0 },
+            { id: 'EMP010', fullName: 'Jane Doe', gender: 'Female', hiringDate: '2019-01-15', position: 'Operations Manager', department: 'Operations', dob: '1987-06-10', phone: '555-012-3456', email: 'jane@company.com', address: '707 Aspen Way', idNumber: '88002244667788', socialInsurance: 'SI88002', status: 'Active', militaryStatus: 'N/A', level: 'Manager', directManager: null, resignDate: null, maritalStatus: 'Married', faculty: 'Supply Chain Management', gradYear: 2009, annualLeaveBalance: 21 },
         ];
 
         let leaveRecords = [
@@ -1635,14 +1865,19 @@
             { id: 4, employeeId: 'EMP007', employeeName: 'Grace Hopper', startDate: '2024-02-15', endDate: '2024-02-16', days: 2, type: 'Annual Leave', status: 'Approved' },
             { id: 5, employeeId: 'EMP002', employeeName: 'Bob The Builder', startDate: '2024-06-10', endDate: '2024-06-10', days: 0.5, type: 'Annual Leave', status: 'Approved' },
             { id: 6, employeeId: 'EMP001', employeeName: 'Alice Wonderland', startDate: '2024-07-01', endDate: '2024-07-03', days: 3, type: 'Annual Leave', status: 'Approved' },
+            // Add pending requests for managers to approve
+            { id: 7, employeeId: 'EMP001', employeeName: 'Alice Wonderland', startDate: '2024-08-15', endDate: '2024-08-17', days: 3, type: 'Annual Leave', status: 'Pending' },
+            { id: 8, employeeId: 'EMP003', employeeName: 'Charlie Chaplin', startDate: '2024-08-20', endDate: '2024-08-21', days: 2, type: 'Sick Leave', status: 'Pending' },
+            { id: 9, employeeId: 'EMP007', employeeName: 'Grace Hopper', startDate: '2024-08-25', endDate: '2024-08-26', days: 2, type: 'Annual Leave', status: 'Pending' },
         ];
 
         // --- Global Variables ---
         let departments = [];
         let positions = [];
         let managers = [];
-        let currentUserRole = ''; // Will be set to 'admin' or 'employee' during login
+        let currentUserRole = ''; // Will be set to 'admin', 'manager', or 'employee' during login
         let currentUserId = ''; // Will store the current user's ID (employee ID or 'admin')
+        let currentUserData = null; // Will store the current user's data if they are an employee or manager
         let userAccounts = []; // Will store user account information
         let deptChartInstance, levelChartInstance, hiringChartInstance, leavesDeptChartInstance, genderChartInstance, ageChartInstance, monthlyHiringChartInstance;
 
@@ -1704,15 +1939,23 @@
             const savedUserAccounts = localStorage.getItem('hrSystemUserAccounts');
             if (savedUserAccounts) {
                 userAccounts = JSON.parse(savedUserAccounts);
+
+                // Ensure all employees have accounts (in case new employees were added)
+                // This will create accounts for any employees that don't have one
+                generateUserAccounts();
             } else {
                 // Generate user accounts if none exist
                 generateUserAccounts();
             }
 
+            console.log('Available user accounts:', userAccounts);
+
             // Find the user account
             const userAccount = userAccounts.find(account => account.username === username && account.password === password);
 
             if (userAccount) {
+                console.log('Login successful:', userAccount);
+
                 // Set the current user role and ID
                 currentUserRole = userAccount.role;
                 currentUserId = userAccount.role === 'admin' ? 'admin' : userAccount.employeeId;
@@ -1721,16 +1964,29 @@
                 document.getElementById('app-container').classList.remove('hidden');
                 document.body.classList.add('flex', 'h-screen');
                 errorDiv.classList.add('hidden');
+
+                // Set current user data if not admin
+                if (currentUserRole !== 'admin') {
+                    currentUserData = employees.find(emp => emp.id === currentUserId);
+                    console.log('Current user data:', currentUserData);
+                }
+
                 initializeAppUI();
 
                 if (currentUserRole === 'admin') {
                     // Show a message indicating admin mode
                     showMessage('Logged in as Administrator. All submissions will be auto-approved.');
+                } else if (currentUserRole === 'manager') {
+                    // Find the employee/manager
+                    if (currentUserData) {
+                        showMessage(`Welcome, ${currentUserData.fullName}! You are logged in as a manager.`);
+                    } else {
+                        showMessage('Welcome! You are logged in as a manager.');
+                    }
                 } else {
                     // Find the employee
-                    const employee = employees.find(emp => emp.id === currentUserId);
-                    if (employee) {
-                        showMessage(`Welcome, ${employee.fullName}! You are logged in as an employee.`);
+                    if (currentUserData) {
+                        showMessage(`Welcome, ${currentUserData.fullName}! You are logged in as an employee.`);
                     } else {
                         showMessage('Welcome! You are logged in as an employee.');
                     }
@@ -1794,6 +2050,9 @@
 
              // Calculate and update all employee leave balances
              updateAllEmployeeLeaveBalances();
+
+             // Configure UI based on user role
+             configureUIForUserRole();
 
              // Initial setup for the main app
              showSection('dashboard'); // Show dashboard by default
@@ -2007,6 +2266,9 @@
             }];
 
             // Create accounts for all employees
+            let newAccountsCreated = 0;
+            let accountsUpdated = 0;
+
             employees.forEach(employee => {
                 if (employee.email) {
                     // Check if account already exists
@@ -2014,20 +2276,37 @@
                         account.employeeId === employee.id || account.username === employee.email
                     );
 
+                    // Determine role based on employee level
+                    const role = employee.level === 'Manager' ? 'manager' : 'employee';
+
                     if (!existingAccount) {
+                        // Create new account with default password
                         userAccounts.push({
                             username: employee.email,
                             password: 'user123',
-                            role: 'employee',
+                            role: role,
                             employeeId: employee.id
                         });
+                        newAccountsCreated++;
+                    } else if (existingAccount.role !== role) {
+                        // Update role if it has changed
+                        existingAccount.role = role;
+                        accountsUpdated++;
                     }
                 }
             });
 
             // Save to localStorage
             localStorage.setItem('hrSystemUserAccounts', JSON.stringify(userAccounts));
+
             console.log(`Generated ${userAccounts.length} user accounts (including admin)`);
+            console.log(`Created ${newAccountsCreated} new accounts, updated ${accountsUpdated} existing accounts`);
+
+            if (newAccountsCreated > 0) {
+                showMessage(`Created ${newAccountsCreated} new user accounts with default password: user123`, 'success');
+            }
+
+            return userAccounts;
         }
 
         // Set theme (light/dark)
@@ -2046,6 +2325,631 @@
             departments = [...new Set(employees.map(e => e.department))].sort();
             positions = [...new Set(employees.map(e => e.position))].sort();
             managers = employees.filter(e => e.level === 'Manager');
+        }
+
+        // --- Configure UI based on user role ---
+        function configureUIForUserRole() {
+            console.log(`Configuring UI for user role: ${currentUserRole}`);
+
+            // Hide all admin-only elements by default
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Show/hide elements based on user role
+            if (currentUserRole === 'admin') {
+                // Show all admin-only elements
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.classList.remove('hidden');
+                });
+
+                // Admin sees the full dashboard
+                showSection('dashboard');
+            }
+            else if (currentUserRole === 'manager') {
+                // Show manager-specific elements
+                document.getElementById('nav-item-employee-profile').classList.remove('hidden');
+                document.getElementById('nav-item-my-requests').classList.remove('hidden');
+                document.getElementById('nav-item-manager-dashboard').classList.remove('hidden');
+
+                // Make sure dashboard is hidden
+                document.getElementById('nav-item-dashboard').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+
+                // Initialize manager dashboard
+                initializeManagerDashboard();
+
+                // Show manager dashboard by default
+                showSection('manager-dashboard');
+            }
+            else if (currentUserRole === 'employee') {
+                // Show employee-specific elements
+                document.getElementById('nav-item-employee-profile').classList.remove('hidden');
+                document.getElementById('nav-item-my-requests').classList.remove('hidden');
+
+                // Make sure dashboard is hidden
+                document.getElementById('nav-item-dashboard').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
+
+                // Initialize employee profile
+                initializeEmployeeProfile();
+
+                // Show employee profile by default
+                showSection('employee-profile');
+            }
+
+            // Set up event listeners for request buttons
+            setupRequestButtonListeners();
+        }
+
+        // --- Initialize Employee Profile ---
+        function initializeEmployeeProfile() {
+            if (!currentUserData) return;
+
+            // Set basic profile information
+            document.getElementById('profile-name').textContent = currentUserData.fullName;
+            document.getElementById('profile-position').textContent = currentUserData.position;
+
+            // Set status badge
+            const statusBadge = document.getElementById('profile-status');
+            statusBadge.textContent = currentUserData.status;
+            if (currentUserData.status === 'Active') {
+                statusBadge.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                statusBadge.classList.add('bg-red-100', 'text-red-800');
+            }
+
+            // Set other profile details
+            document.getElementById('profile-id').textContent = currentUserData.id;
+            document.getElementById('profile-department').textContent = currentUserData.department;
+            document.getElementById('profile-email').textContent = currentUserData.email || 'Not provided';
+            document.getElementById('profile-phone').textContent = currentUserData.phone || 'Not provided';
+            document.getElementById('profile-dob').textContent = formatDate(currentUserData.dob);
+            document.getElementById('profile-hiring-date').textContent = formatDate(currentUserData.hiringDate);
+            document.getElementById('profile-manager').textContent = currentUserData.directManager || 'None';
+            document.getElementById('profile-level').textContent = currentUserData.level;
+
+            // Set leave balance
+            document.getElementById('profile-leave-balance').textContent = currentUserData.annualLeaveBalance || 0;
+
+            // Calculate used leaves
+            const usedLeaves = calculateUsedLeaves(currentUserData.id);
+            document.getElementById('profile-used-leaves').textContent = usedLeaves;
+
+            // Calculate pending requests
+            const pendingRequests = calculatePendingRequests(currentUserData.id);
+            document.getElementById('profile-pending-requests').textContent = pendingRequests;
+
+            // Populate my requests section
+            populateMyRequests();
+        }
+
+        // --- Calculate Used Leaves ---
+        function calculateUsedLeaves(employeeId) {
+            const currentYear = new Date().getFullYear();
+            const approvedLeaves = leaveRecords.filter(record =>
+                record.employeeId === employeeId &&
+                record.status === 'Approved' &&
+                new Date(record.startDate).getFullYear() === currentYear &&
+                (record.type === 'Annual Leave' || record.type === 'annual')
+            );
+
+            return approvedLeaves.reduce((total, record) => total + record.days, 0);
+        }
+
+        // --- Calculate Pending Requests ---
+        function calculatePendingRequests(employeeId) {
+            const pendingLeaves = leaveRecords.filter(record =>
+                record.employeeId === employeeId && record.status === 'Pending'
+            ).length;
+
+            const pendingExcuses = excuseRecords.filter(record =>
+                record.employeeId === employeeId && record.status === 'Pending'
+            ).length;
+
+            const pendingOvertime = overtimeRecords.filter(record =>
+                record.employeeId === employeeId && record.status === 'Pending'
+            ).length;
+
+            return pendingLeaves + pendingExcuses + pendingOvertime;
+        }
+
+        // --- Populate My Requests Section ---
+        function populateMyRequests() {
+            if (!currentUserData) return;
+
+            const employeeId = currentUserData.id;
+
+            // Reload data from localStorage to ensure we have the latest data
+            const savedLeaves = localStorage.getItem('hrSystemLeaves');
+            if (savedLeaves) {
+                leaveRecords = JSON.parse(savedLeaves);
+            }
+
+            const savedExcuses = localStorage.getItem('hrSystemExcuses');
+            if (savedExcuses) {
+                excuseRecords = JSON.parse(savedExcuses);
+            }
+
+            const savedOvertime = localStorage.getItem('hrSystemOvertime');
+            if (savedOvertime) {
+                overtimeRecords = JSON.parse(savedOvertime);
+            }
+
+            // Get employee's leave requests
+            const myLeaves = leaveRecords.filter(record => record.employeeId === employeeId);
+            const myExcuses = excuseRecords.filter(record => record.employeeId === employeeId);
+            const myOvertime = overtimeRecords.filter(record => record.employeeId === employeeId);
+
+            // Update counts
+            document.getElementById('my-leave-count').textContent = myLeaves.length;
+            document.getElementById('my-excuse-count').textContent = myExcuses.length;
+            document.getElementById('my-overtime-count').textContent = myOvertime.length;
+
+            // Populate leave requests
+            const leaveContainer = document.getElementById('my-leave-requests');
+            leaveContainer.innerHTML = '';
+
+            if (myLeaves.length === 0) {
+                leaveContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No leave requests found</p>';
+            } else {
+                myLeaves.forEach(leave => {
+                    const statusClass = leave.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                                       (leave.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+
+                    leaveContainer.innerHTML += `
+                        <div class="p-3 border rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-medium">${leave.type}</p>
+                                    <p class="text-sm text-gray-600">${formatDate(leave.startDate)} - ${formatDate(leave.endDate)}</p>
+                                    <p class="text-sm text-gray-500">${leave.days} day(s)</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusClass}">${leave.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate excuse requests
+            const excuseContainer = document.getElementById('my-excuse-requests');
+            excuseContainer.innerHTML = '';
+
+            if (myExcuses.length === 0) {
+                excuseContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No excuse requests found</p>';
+            } else {
+                myExcuses.forEach(excuse => {
+                    const statusClass = excuse.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                                       (excuse.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+
+                    excuseContainer.innerHTML += `
+                        <div class="p-3 border rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-medium">${excuse.type}</p>
+                                    <p class="text-sm text-gray-600">${formatDate(excuse.date)}</p>
+                                    <p class="text-sm text-gray-500">${excuse.startTime} - ${excuse.endTime}</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusClass}">${excuse.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate overtime requests
+            const overtimeContainer = document.getElementById('my-overtime-requests');
+            overtimeContainer.innerHTML = '';
+
+            if (myOvertime.length === 0) {
+                overtimeContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No overtime requests found</p>';
+            } else {
+                myOvertime.forEach(overtime => {
+                    const statusClass = overtime.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                                       (overtime.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+
+                    overtimeContainer.innerHTML += `
+                        <div class="p-3 border rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-medium">Overtime Request</p>
+                                    <p class="text-sm text-gray-600">${formatDate(overtime.date)}</p>
+                                    <p class="text-sm text-gray-500">${overtime.startTime} - ${overtime.endTime} (${overtime.hours} hours)</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusClass}">${overtime.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // --- Initialize Manager Dashboard ---
+        function initializeManagerDashboard() {
+            if (!currentUserData) return;
+
+            // Get team members (employees who have this manager as their direct manager)
+            const teamMembers = employees.filter(emp =>
+                emp.directManager === currentUserData.fullName && emp.id !== currentUserData.id
+            );
+
+            // Populate team members
+            const teamContainer = document.getElementById('team-members-container');
+            teamContainer.innerHTML = '';
+
+            if (teamMembers.length === 0) {
+                teamContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-4">No team members found</p>';
+            } else {
+                teamMembers.forEach(member => {
+                    const statusClass = member.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+
+                    teamContainer.innerHTML += `
+                        <div class="bg-white p-4 rounded-lg border">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-indigo-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">${member.fullName}</p>
+                                    <p class="text-sm text-gray-500">${member.position}</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${statusClass}">${member.status}</span>
+                                <span class="text-xs text-gray-500">ID: ${member.id}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate pending approvals
+            populatePendingApprovals();
+        }
+
+        // --- Populate Pending Approvals ---
+        function populatePendingApprovals() {
+            if (!currentUserData) return;
+
+            // Get team members IDs - employees who have this manager as their direct manager
+            const teamMemberIds = employees
+                .filter(emp => emp.directManager === currentUserData.fullName && emp.id !== currentUserData.id)
+                .map(emp => emp.id);
+
+            console.log("Manager:", currentUserData.fullName);
+            console.log("Team member IDs:", teamMemberIds);
+
+            // Get pending leave requests from team members
+            const pendingLeaves = leaveRecords.filter(record =>
+                teamMemberIds.includes(record.employeeId) && record.status === 'Pending'
+            );
+
+            // Get pending excuse requests from team members
+            const pendingExcuses = excuseRecords.filter(record =>
+                teamMemberIds.includes(record.employeeId) && record.status === 'Pending'
+            );
+
+            // Get pending overtime requests from team members
+            const pendingOvertime = overtimeRecords.filter(record =>
+                teamMemberIds.includes(record.employeeId) && record.status === 'Pending'
+            );
+
+            console.log("Pending leaves:", pendingLeaves);
+            console.log("Pending excuses:", pendingExcuses);
+            console.log("Pending overtime:", pendingOvertime);
+
+            // Update counts
+            document.getElementById('pending-leaves-count').textContent = pendingLeaves.length;
+            document.getElementById('pending-excuses-count').textContent = pendingExcuses.length;
+            document.getElementById('pending-overtime-count').textContent = pendingOvertime.length;
+
+            // Populate pending leaves container
+            const leavesContainer = document.getElementById('pending-leaves-container');
+            leavesContainer.innerHTML = '';
+
+            if (pendingLeaves.length === 0) {
+                leavesContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No pending leave requests</p>';
+            } else {
+                pendingLeaves.forEach(leave => {
+                    leavesContainer.innerHTML += `
+                        <div class="p-4 border rounded-lg">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="font-medium">${leave.employeeName}</p>
+                                    <p class="text-sm text-gray-600">${leave.type}</p>
+                                    <p class="text-sm text-gray-500">${formatDate(leave.startDate)} - ${formatDate(leave.endDate)} (${leave.days} days)</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="approveLeaveRecordFromManager(${leave.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-check mr-1"></i> Approve
+                                </button>
+                                <button onclick="rejectLeaveRecordFromManager(${leave.id})" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-times mr-1"></i> Reject
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate pending excuses container
+            const excusesContainer = document.getElementById('pending-excuses-container');
+            excusesContainer.innerHTML = '';
+
+            if (pendingExcuses.length === 0) {
+                excusesContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No pending excuse requests</p>';
+            } else {
+                pendingExcuses.forEach(excuse => {
+                    excusesContainer.innerHTML += `
+                        <div class="p-4 border rounded-lg">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="font-medium">${excuse.employeeName}</p>
+                                    <p class="text-sm text-gray-600">${excuse.type}</p>
+                                    <p class="text-sm text-gray-500">${formatDate(excuse.date)}: ${excuse.startTime} - ${excuse.endTime}</p>
+                                    <p class="text-xs text-gray-500 mt-1">Reason: ${excuse.reason}</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="approveExcuseRecordFromManager(${excuse.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-check mr-1"></i> Approve
+                                </button>
+                                <button onclick="rejectExcuseRecordFromManager(${excuse.id})" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-times mr-1"></i> Reject
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Populate pending overtime container
+            const overtimeContainer = document.getElementById('pending-overtime-container');
+            overtimeContainer.innerHTML = '';
+
+            if (pendingOvertime.length === 0) {
+                overtimeContainer.innerHTML = '<p class="text-gray-500 text-center py-4">No pending overtime requests</p>';
+            } else {
+                pendingOvertime.forEach(overtime => {
+                    overtimeContainer.innerHTML += `
+                        <div class="p-4 border rounded-lg">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <p class="font-medium">${overtime.employeeName}</p>
+                                    <p class="text-sm text-gray-600">Overtime Request</p>
+                                    <p class="text-sm text-gray-500">${formatDate(overtime.date)}: ${overtime.startTime} - ${overtime.endTime} (${overtime.hours} hours)</p>
+                                    <p class="text-xs text-gray-500 mt-1">Reason: ${overtime.reason}</p>
+                                </div>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="approveOvertimeRecordFromManager(${overtime.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-check mr-1"></i> Approve
+                                </button>
+                                <button onclick="rejectOvertimeRecordFromManager(${overtime.id})" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded">
+                                    <i class="fas fa-times mr-1"></i> Reject
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // --- Manager Approval Functions ---
+        function approveLeaveRecordFromManager(leaveId) {
+            const leaveIndex = leaveRecords.findIndex(record => record.id == leaveId);
+            if (leaveIndex !== -1) {
+                // Update status to Approved
+                leaveRecords[leaveIndex].status = 'Approved';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemLeaves', JSON.stringify(leaveRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Update leave balance for the employee if it's an annual leave
+                if (leaveRecords[leaveIndex].type === 'Annual Leave' || leaveRecords[leaveIndex].type === 'annual') {
+                    const employeeId = leaveRecords[leaveIndex].employeeId;
+                    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+                    if (employeeIndex !== -1) {
+                        // Deduct leave days from balance
+                        const leaveDays = leaveRecords[leaveIndex].days;
+                        employees[employeeIndex].annualLeaveBalance -= leaveDays;
+
+                        // Save updated employee data
+                        localStorage.setItem('hrSystemEmployees', JSON.stringify(employees));
+                    }
+                }
+
+                // Show success message
+                showMessage(`Leave request for ${leaveRecords[leaveIndex].employeeName} has been approved.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        function rejectLeaveRecordFromManager(leaveId) {
+            const leaveIndex = leaveRecords.findIndex(record => record.id == leaveId);
+            if (leaveIndex !== -1) {
+                // Update status to Rejected
+                leaveRecords[leaveIndex].status = 'Rejected';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemLeaves', JSON.stringify(leaveRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Show success message
+                showMessage(`Leave request for ${leaveRecords[leaveIndex].employeeName} has been rejected.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        function approveExcuseRecordFromManager(excuseId) {
+            const excuseIndex = excuseRecords.findIndex(record => record.id == excuseId);
+            if (excuseIndex !== -1) {
+                // Update status to Approved
+                excuseRecords[excuseIndex].status = 'Approved';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemExcuses', JSON.stringify(excuseRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Show success message
+                showMessage(`Excuse request for ${excuseRecords[excuseIndex].employeeName} has been approved.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        function rejectExcuseRecordFromManager(excuseId) {
+            const excuseIndex = excuseRecords.findIndex(record => record.id == excuseId);
+            if (excuseIndex !== -1) {
+                // Update status to Rejected
+                excuseRecords[excuseIndex].status = 'Rejected';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemExcuses', JSON.stringify(excuseRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Show success message
+                showMessage(`Excuse request for ${excuseRecords[excuseIndex].employeeName} has been rejected.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        function approveOvertimeRecordFromManager(overtimeId) {
+            const overtimeIndex = overtimeRecords.findIndex(record => record.id == overtimeId);
+            if (overtimeIndex !== -1) {
+                // Update status to Approved
+                overtimeRecords[overtimeIndex].status = 'Approved';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemOvertime', JSON.stringify(overtimeRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Show success message
+                showMessage(`Overtime request for ${overtimeRecords[overtimeIndex].employeeName} has been approved.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        function rejectOvertimeRecordFromManager(overtimeId) {
+            const overtimeIndex = overtimeRecords.findIndex(record => record.id == overtimeId);
+            if (overtimeIndex !== -1) {
+                // Update status to Rejected
+                overtimeRecords[overtimeIndex].status = 'Rejected';
+
+                // Save to localStorage
+                localStorage.setItem('hrSystemOvertime', JSON.stringify(overtimeRecords));
+
+                // Refresh the manager dashboard
+                populatePendingApprovals();
+
+                // Show success message
+                showMessage(`Overtime request for ${overtimeRecords[overtimeIndex].employeeName} has been rejected.`);
+
+                // Update My Requests view if the employee is currently logged in
+                if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                    populateMyRequests();
+                }
+            }
+        }
+
+        // --- Switch Approval Tab ---
+        function switchApprovalTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.approval-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Show selected tab content
+            document.getElementById(`${tabId}-content`).classList.remove('hidden');
+
+            // Update tab button styles
+            document.querySelectorAll('[id^="tab-pending-"]').forEach(tab => {
+                tab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                tab.classList.add('text-gray-500', 'hover:text-gray-700');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('text-gray-500', 'hover:text-gray-700');
+            document.getElementById(`tab-${tabId}`).classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+        }
+
+        // --- Setup Request Button Listeners ---
+        function setupRequestButtonListeners() {
+            // New leave request button
+            document.getElementById('new-leave-request-btn').addEventListener('click', function() {
+                showSection('leaves');
+                document.getElementById('leave-form-container').classList.remove('hidden');
+
+                // Pre-fill employee code if employee is logged in
+                if (currentUserData) {
+                    document.getElementById('leave-employee-code').value = currentUserData.id;
+                    // Trigger the input event to populate employee name
+                    const event = new Event('input', { bubbles: true });
+                    document.getElementById('leave-employee-code').dispatchEvent(event);
+                }
+            });
+
+            // New excuse request button
+            document.getElementById('new-excuse-request-btn').addEventListener('click', function() {
+                showSection('excuses');
+                document.getElementById('excuse-form-container').classList.remove('hidden');
+
+                // Pre-fill employee code if employee is logged in
+                if (currentUserData) {
+                    document.getElementById('excuse-employee-code').value = currentUserData.id;
+                    // Trigger the input event to populate employee name
+                    const event = new Event('input', { bubbles: true });
+                    document.getElementById('excuse-employee-code').dispatchEvent(event);
+                }
+            });
+
+            // New overtime request button
+            document.getElementById('new-overtime-request-btn').addEventListener('click', function() {
+                showSection('overtime');
+                document.getElementById('overtime-form-container').classList.remove('hidden');
+
+                // Pre-fill employee code if employee is logged in
+                if (currentUserData) {
+                    document.getElementById('overtime-employee-code').value = currentUserData.id;
+                    // Trigger the input event to populate employee name
+                    const event = new Event('input', { bubbles: true });
+                    document.getElementById('overtime-employee-code').dispatchEvent(event);
+                }
+            });
         }
 
         // --- Navigation ---
@@ -2067,6 +2971,16 @@
             // Re-initialize charts only if switching TO the dashboard
             if (sectionId === 'dashboard') {
                 updateDashboard(); // Update dashboard with current filter state
+            }
+
+            // Update manager dashboard if switching to it
+            if (sectionId === 'manager-dashboard' && currentUserRole === 'manager') {
+                initializeManagerDashboard();
+            }
+
+            // Update my requests if switching to it
+            if (sectionId === 'my-requests' && (currentUserRole === 'employee' || currentUserRole === 'manager')) {
+                populateMyRequests();
             }
         }
 
@@ -3080,26 +3994,43 @@
                     account.employeeId === formData.id || account.username === email
                 );
 
+                // Determine role based on employee level
+                const role = formData.level === 'Manager' ? 'manager' : 'employee';
+
                 if (existingAccountIndex !== -1) {
                     // Update existing account
+                    const oldRole = userAccounts[existingAccountIndex].role;
                     userAccounts[existingAccountIndex] = {
                         ...userAccounts[existingAccountIndex],
                         username: email,
                         employeeId: formData.id,
-                        role: 'employee'
+                        role: role
                     };
+
+                    // Show message about updated account
+                    if (oldRole !== role) {
+                        showMessage(`User account updated: ${email} (Role changed from ${oldRole} to ${role})`, 'success');
+                    } else {
+                        showMessage(`User account updated: ${email}`, 'success');
+                    }
                 } else {
-                    // Create new account
+                    // Create new account with default password
                     userAccounts.push({
                         username: email,
                         password: 'user123',
-                        role: 'employee',
+                        role: role,
                         employeeId: formData.id
                     });
+
+                    // Show message about new account creation
+                    showMessage(`New user account created: ${email} (Role: ${role}, Password: user123)`, 'success');
                 }
 
                 // Save user accounts to localStorage
                 localStorage.setItem('hrSystemUserAccounts', JSON.stringify(userAccounts));
+
+                // Log the updated user accounts for debugging
+                console.log('Updated user accounts:', userAccounts);
             }
 
             // Refresh UI
@@ -3171,7 +4102,30 @@
             if (!tableBody) return;
             tableBody.innerHTML = '';
 
-            if (leaveRecords.length === 0) {
+            // Filter records based on user role
+            let filteredLeaveRecords = [];
+
+            if (currentUserRole === 'admin') {
+                // Admin sees all records
+                filteredLeaveRecords = leaveRecords;
+            }
+            else if (currentUserRole === 'manager') {
+                // Manager sees only their team's records
+                const teamMemberIds = employees
+                    .filter(emp => emp.directManager === currentUserData.fullName)
+                    .map(emp => emp.id);
+
+                // Include manager's own records and team members' records
+                filteredLeaveRecords = leaveRecords.filter(record =>
+                    teamMemberIds.includes(record.employeeId) || record.employeeId === currentUserData.id
+                );
+            }
+            else {
+                // Employee sees only their own records
+                filteredLeaveRecords = leaveRecords.filter(record => record.employeeId === currentUserData.id);
+            }
+
+            if (filteredLeaveRecords.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No leave records found.</td></tr>';
                 return;
             }
@@ -3184,11 +4138,13 @@
             const currentYear = new Date().getFullYear();
 
             // DIRECT CALCULATION: Get the filtered records based on the current filters
-            let filteredRecords = [...leaveRecords];
+            let filteredRecords = [...filteredLeaveRecords];
 
             // Apply employee filter
             if (employeeFilter !== 'all') {
+                console.log('Applying employee filter:', employeeFilter);
                 filteredRecords = filteredRecords.filter(record => record.employeeId === employeeFilter);
+                console.log('Records after employee filter:', filteredRecords.length);
             }
 
             // Apply month filter
@@ -3423,33 +4379,47 @@
             localStorage.setItem('hrSystemEmployees', JSON.stringify(employees));
             localStorage.setItem('hrSystemLeaves', JSON.stringify(leaveRecords));
 
-            populateLeaveTable();
-            updateDashboard(); // Update dashboard as leaves affect stats/charts
-
-            // Update leave summary with current filters
-            const employeeFilter = document.getElementById('leave-filter-employee').value;
-            const monthFilter = document.getElementById('leave-filter-month').value;
-            updateLeaveSummary(employeeFilter, monthFilter);
-
+            // Reset form
             document.getElementById('leave-form').reset();
             document.getElementById('leave-employee-name').value = '';
             document.getElementById('leave-balance').value = '';
 
             // Hide the leave form container after submission
             document.getElementById('leave-form-container').classList.add('hidden');
+
+            // If employee or manager is submitting their own request, redirect to My Requests
+            if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                showSection('my-requests');
+                populateMyRequests();
+            } else {
+                // For admin, show the regular leave table
+                populateLeaveTable();
+                updateDashboard(); // Update dashboard as leaves affect stats/charts
+
+                // Update leave summary with current filters
+                const employeeFilter = document.getElementById('leave-filter-employee').value;
+                const monthFilter = document.getElementById('leave-filter-month').value;
+                updateLeaveSummary(employeeFilter, monthFilter);
+            }
         }
 
         // Global variables for excuses, overtime, and penalties
         let excuseRecords = [
             { id: 1, employeeId: 'EMP001', employeeName: 'Alice Wonderland', date: '2024-03-15', type: 'Late Check-in', startTime: '10:00 AM', endTime: '11:00 AM', reason: 'Traffic jam on highway', status: 'Approved' },
             { id: 2, employeeId: 'EMP003', employeeName: 'Charlie Chaplin', date: '2024-04-05', type: 'Early Check-out', startTime: '3:00 PM', endTime: '5:00 PM', reason: 'Doctor appointment', status: 'Approved' },
-            { id: 3, employeeId: 'EMP005', employeeName: 'Ethan Hunt', date: '2024-05-10', type: 'Outdoor Task', startTime: '1:00 PM', endTime: '4:00 PM', reason: 'Client meeting downtown', status: 'Pending' }
+            { id: 3, employeeId: 'EMP005', employeeName: 'Ethan Hunt', date: '2024-05-10', type: 'Outdoor Task', startTime: '1:00 PM', endTime: '4:00 PM', reason: 'Client meeting downtown', status: 'Pending' },
+            // Add pending excuse requests for managers to approve
+            { id: 4, employeeId: 'EMP001', employeeName: 'Alice Wonderland', date: '2024-08-18', type: 'Late Check-in', startTime: '9:30 AM', endTime: '10:30 AM', reason: 'Car trouble', status: 'Pending' },
+            { id: 5, employeeId: 'EMP003', employeeName: 'Charlie Chaplin', date: '2024-08-22', type: 'Early Check-out', startTime: '2:00 PM', endTime: '5:00 PM', reason: 'Family emergency', status: 'Pending' }
         ];
 
         let overtimeRecords = [
             { id: 1, employeeId: 'EMP001', employeeName: 'Alice Wonderland', date: '2024-03-20', startTime: '5:00 PM', endTime: '8:00 PM', hours: 3, reason: 'Project deadline', status: 'Approved' },
             { id: 2, employeeId: 'EMP003', employeeName: 'Charlie Chaplin', date: '2024-04-10', startTime: '6:00 PM', endTime: '9:00 PM', hours: 3, reason: 'System maintenance', status: 'Approved' },
-            { id: 3, employeeId: 'EMP005', employeeName: 'Ethan Hunt', date: '2024-05-15', startTime: '5:00 PM', endTime: '7:00 PM', hours: 2, reason: 'Client emergency', status: 'Pending' }
+            { id: 3, employeeId: 'EMP005', employeeName: 'Ethan Hunt', date: '2024-05-15', startTime: '5:00 PM', endTime: '7:00 PM', hours: 2, reason: 'Client emergency', status: 'Pending' },
+            // Add pending overtime requests for managers to approve
+            { id: 4, employeeId: 'EMP001', employeeName: 'Alice Wonderland', date: '2024-08-19', startTime: '5:00 PM', endTime: '8:00 PM', hours: 3, reason: 'End of month reports', status: 'Pending' },
+            { id: 5, employeeId: 'EMP007', employeeName: 'Grace Hopper', date: '2024-08-23', startTime: '5:00 PM', endTime: '7:00 PM', hours: 2, reason: 'Financial quarter closing', status: 'Pending' }
         ];
 
         let penaltyRecords = [
@@ -3585,16 +4555,22 @@
             // Save to localStorage
             localStorage.setItem('hrSystemExcuses', JSON.stringify(excuseRecords));
 
-            // Update UI
-            populateExcuseTable();
-            updateExcuseSummary();
-
             // Reset form
             document.getElementById('excuse-form').reset();
             document.getElementById('excuse-employee-name').value = '';
 
             // Hide the form container
             document.getElementById('excuse-form-container').classList.add('hidden');
+
+            // If employee or manager is submitting their own request, redirect to My Requests
+            if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                showSection('my-requests');
+                populateMyRequests();
+            } else {
+                // For admin, show the regular excuse table
+                populateExcuseTable();
+                updateExcuseSummary();
+            }
         }
 
         // Function to validate and auto-correct penalty days to nearest 0.25 increment
@@ -3832,16 +4808,22 @@
             // Save to localStorage
             localStorage.setItem('hrSystemOvertime', JSON.stringify(overtimeRecords));
 
-            // Update UI
-            populateOvertimeTable();
-            updateOvertimeSummary();
-
             // Reset form
             document.getElementById('overtime-form').reset();
             document.getElementById('overtime-employee-name').value = '';
 
             // Hide the form container
             document.getElementById('overtime-form-container').classList.add('hidden');
+
+            // If employee or manager is submitting their own request, redirect to My Requests
+            if (currentUserRole === 'employee' || currentUserRole === 'manager') {
+                showSection('my-requests');
+                populateMyRequests();
+            } else {
+                // For admin, show the regular overtime table
+                populateOvertimeTable();
+                updateOvertimeSummary();
+            }
         }
 
         // Edit overtime record
@@ -4013,7 +4995,30 @@
             if (!tableBody) return;
             tableBody.innerHTML = '';
 
-            if (!overtimeRecords || overtimeRecords.length === 0) {
+            // Filter records based on user role
+            let filteredOvertimeRecords = [];
+
+            if (currentUserRole === 'admin') {
+                // Admin sees all records
+                filteredOvertimeRecords = overtimeRecords;
+            }
+            else if (currentUserRole === 'manager') {
+                // Manager sees only their team's records
+                const teamMemberIds = employees
+                    .filter(emp => emp.directManager === currentUserData.fullName)
+                    .map(emp => emp.id);
+
+                // Include manager's own records and team members' records
+                filteredOvertimeRecords = overtimeRecords.filter(record =>
+                    teamMemberIds.includes(record.employeeId) || record.employeeId === currentUserData.id
+                );
+            }
+            else {
+                // Employee sees only their own records
+                filteredOvertimeRecords = overtimeRecords.filter(record => record.employeeId === currentUserData.id);
+            }
+
+            if (!filteredOvertimeRecords || filteredOvertimeRecords.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No overtime records found.</td></tr>';
                 return;
             }
@@ -4026,11 +5031,13 @@
             const currentYear = new Date().getFullYear();
 
             // Filter records
-            let filteredRecords = [...overtimeRecords];
+            let filteredRecords = [...filteredOvertimeRecords];
 
             // Apply employee filter
             if (employeeFilter !== 'all') {
+                console.log('Applying overtime employee filter:', employeeFilter);
                 filteredRecords = filteredRecords.filter(record => record.employeeId === employeeFilter);
+                console.log('Records after overtime employee filter:', filteredRecords.length);
             }
 
             // Apply month filter
@@ -4115,9 +5122,32 @@
 
             if (!totalMonthElement || !totalYearElement) return;
 
+            // Get filtered records based on user role
+            let roleFilteredRecords = [];
+
+            if (currentUserRole === 'admin') {
+                // Admin sees all records
+                roleFilteredRecords = overtimeRecords;
+            }
+            else if (currentUserRole === 'manager') {
+                // Manager sees only their team's records
+                const teamMemberIds = employees
+                    .filter(emp => emp.directManager === currentUserData.fullName)
+                    .map(emp => emp.id);
+
+                // Include manager's own records and team members' records
+                roleFilteredRecords = overtimeRecords.filter(record =>
+                    teamMemberIds.includes(record.employeeId) || record.employeeId === currentUserData.id
+                );
+            }
+            else {
+                // Employee sees only their own records
+                roleFilteredRecords = overtimeRecords.filter(record => record.employeeId === currentUserData.id);
+            }
+
             // Filter records for the current month
             const currentMonth = new Date().getMonth() + 1;
-            let monthlyRecords = overtimeRecords.filter(record => {
+            let monthlyRecords = roleFilteredRecords.filter(record => {
                 const recordDate = new Date(record.date);
                 const recordMonth = recordDate.getMonth() + 1;
                 console.log(`Overtime record ${record.id} date: ${record.date}, month: ${recordMonth}`);
@@ -4129,7 +5159,7 @@
             console.log('Monthly overtime records count:', monthlyRecords.length);
 
             // Filter records for the current year
-            let yearlyRecords = overtimeRecords.filter(record => {
+            let yearlyRecords = roleFilteredRecords.filter(record => {
                 const recordDate = new Date(record.date);
                 return recordDate.getFullYear() === currentYear &&
                        (employeeId === 'all' || record.employeeId === employeeId) &&
@@ -4204,14 +5234,21 @@
 
             // Add click event listener to apply filters button
             applyFiltersButton.addEventListener('click', function() {
+                console.log('Overtime filter button clicked');
                 // Toggle the button color and check if we need to reset
                 const wasActive = toggleFilterButtonColor(this, resetOvertimeFilters);
+                console.log('Was active:', wasActive);
 
                 // Only apply filters if we're not resetting
                 if (!wasActive) {
                     // Get the current filter values
                     const employeeId = document.getElementById('overtime-filter-employee').value;
                     const month = document.getElementById('overtime-filter-month').value;
+                    console.log('Applying overtime filters:', { employeeId, month });
+
+                    // Force the filter values to be applied
+                    document.getElementById('overtime-filter-employee').value = employeeId;
+                    document.getElementById('overtime-filter-month').value = month;
 
                     // Update both the table and the summary with the same filters
                     populateOvertimeTable();
@@ -4836,7 +5873,30 @@
             if (!tableBody) return;
             tableBody.innerHTML = '';
 
-            if (!excuseRecords || excuseRecords.length === 0) {
+            // Filter records based on user role
+            let filteredExcuseRecords = [];
+
+            if (currentUserRole === 'admin') {
+                // Admin sees all records
+                filteredExcuseRecords = excuseRecords;
+            }
+            else if (currentUserRole === 'manager') {
+                // Manager sees only their team's records
+                const teamMemberIds = employees
+                    .filter(emp => emp.directManager === currentUserData.fullName)
+                    .map(emp => emp.id);
+
+                // Include manager's own records and team members' records
+                filteredExcuseRecords = excuseRecords.filter(record =>
+                    teamMemberIds.includes(record.employeeId) || record.employeeId === currentUserData.id
+                );
+            }
+            else {
+                // Employee sees only their own records
+                filteredExcuseRecords = excuseRecords.filter(record => record.employeeId === currentUserData.id);
+            }
+
+            if (!filteredExcuseRecords || filteredExcuseRecords.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No excuse records found.</td></tr>';
                 return;
             }
@@ -4851,7 +5911,7 @@
             const currentYear = new Date().getFullYear();
 
             // Filter records
-            let filteredRecords = [...excuseRecords];
+            let filteredRecords = [...filteredExcuseRecords];
             console.log('Total excuse records before filtering:', filteredRecords.length);
 
             // Apply employee filter
@@ -6439,14 +7499,21 @@
 
             // Add click event listener to apply filters button
             applyFiltersButton.addEventListener('click', function() {
+                console.log('Leave filter button clicked');
                 // Toggle the button color and check if we need to reset
                 const wasActive = toggleFilterButtonColor(this, resetLeaveFilters);
+                console.log('Was active:', wasActive);
 
                 // Only apply filters if we're not resetting
                 if (!wasActive) {
                     // Get the current filter values
                     const employeeId = document.getElementById('leave-filter-employee').value;
                     const month = document.getElementById('leave-filter-month').value;
+                    console.log('Applying leave filters:', { employeeId, month });
+
+                    // Force the filter values to be applied
+                    document.getElementById('leave-filter-employee').value = employeeId;
+                    document.getElementById('leave-filter-month').value = month;
 
                     // Update both the table and the summary with the same filters
                     populateLeaveTable();
